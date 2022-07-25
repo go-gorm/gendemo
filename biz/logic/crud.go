@@ -59,6 +59,8 @@ func Query(ctx context.Context) {
 
 	/*--------------Basic query-------------*/
 	user, err = ud.Take()
+	//query by write db
+	user, err = ud.WriteDB().Take()
 	// SELECT * FROM `users` WHERE `users`.`deleted_at` IS NULL LIMIT 1
 	util.CatchErr("take 1 item fail", err)
 	log.Printf("query 1 item: %+v", user)
