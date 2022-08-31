@@ -1,2 +1,2 @@
 # gendemo
-The best practices of using GEN.
+The best practices of using [GEN](https://github.com/go-gorm/gen).
