@@ -10,7 +10,7 @@ import (
 	"gorm.io/plugin/dbresolver"
 )
 
-const MySQLDSN = "gorm:gorm@tcp(127.0.0.1:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local"
+const MySQLDSN = "gen:gen@tcp(localhost:9910)/gen?charset=utf8mb4&parseTime=True&loc=Local"
 
 var (
 	db   *gorm.DB
