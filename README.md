@@ -1,17 +1,18 @@
 # gendemo
+
 The best practices of using [GEN](https://github.com/go-gorm/gen).
 
-### run demo
+## Quick Start
 1. start a test database server instance
 
-```shell
+```bash
 cd cmd & docker-compose up -d
 ```
 2. prepare test table
-```shell
+```bash
 go run main.go 
 ```
 3. generate code
-```shell
+```bash
 sh generate.sh
 ```
