@@ -6,6 +6,7 @@ package query
 
 import (
 	"context"
+	"strings"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -163,6 +164,71 @@ type IRoleDo interface {
 	Returning(value interface{}, columns ...string) IRoleDo
 	UnderlyingDB() *gorm.DB
 	schema.Tabler
+
+	GetByID(id int) (result model.Role, err error)
+	MGet(ids []string) (result []*model.Role, err error)
+	QueryWith(p *model.Role) (result model.Role, err error)
+}
+
+// SELECT * FROM @@table WHERE id=@id
+func (r roleDo) GetByID(id int) (result model.Role, err error) {
+	var params []interface{}
+
+	var generateSQL strings.Builder
+	params = append(params, id)
+	generateSQL.WriteString("SELECT * FROM roles WHERE id=? ")
+
+	var executeSQL *gorm.DB
+	executeSQL = r.UnderlyingDB().Raw(generateSQL.String(), params...).Take(&result) // ignore_security_alert
+	err = executeSQL.Error
+
+	return
+}
+
+// SELECT * FROM @@table WHERE id IN @ids
+func (r roleDo) MGet(ids []string) (result []*model.Role, err error) {
+	var params []interface{}
+
+	var generateSQL strings.Builder
+	params = append(params, ids)
+	generateSQL.WriteString("SELECT * FROM roles WHERE id IN ? ")
+
+	var executeSQL *gorm.DB
+	executeSQL = r.UnderlyingDB().Raw(generateSQL.String(), params...).Find(&result) // ignore_security_alert
+	err = executeSQL.Error
+
+	return
+}
+
+// QueryWith
+// SELECT * FROM @@table
+// {{if p != nil}}
+//     {{if p.ID > 0}}
+//         WHERE id=@p.ID
+//     {{else if p.Name != ""}}
+//         WHERE name=@p.Name
+//     {{end}}
+// {{end}}
+func (r roleDo) QueryWith(p *model.Role) (result model.Role, err error) {
+	var params []interface{}
+
+	var generateSQL strings.Builder
+	generateSQL.WriteString("SELECT * FROM roles ")
+	if p != nil {
+		if p.ID > 0 {
+			params = append(params, p.ID)
+			generateSQL.WriteString("WHERE id=? ")
+		} else if p.Name != "" {
+			params = append(params, p.Name)
+			generateSQL.WriteString("WHERE name=? ")
+		}
+	}
+
+	var executeSQL *gorm.DB
+	executeSQL = r.UnderlyingDB().Raw(generateSQL.String(), params...).Take(&result) // ignore_security_alert
+	err = executeSQL.Error
+
+	return
 }
 
 func (r roleDo) Debug() IRoleDo {

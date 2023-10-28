@@ -4,6 +4,8 @@ import (
 	"context"
 	"strings"
 
+	"github.com/go-gorm/gendemo/biz/dal/diy"
+	"github.com/go-gorm/gendemo/biz/dal/model"
 	"github.com/go-gorm/gendemo/mysql"
 	"gorm.io/gen"
 	"gorm.io/gen/field"
@@ -52,7 +54,7 @@ func main() {
 	// g.ApplyBasic(model.User{}, g.GenerateModel("company"), g.GenerateModelAs("people", "Person", gen.FieldIgnore("address")))
 	// apply diy interfaces on structs or table models
 	// g.ApplyInterface(func(method model.Method) {}, model.User{}, g.GenerateModel("company"))
-	g.ApplyBasic(
+	g.ApplyInterface(func(diy.Querier) {},
 		g.GenerateModel("user", gen.FieldModify(func(f gen.Field) gen.Field {
 			if f.ColumnName == "id" {
 				f.GORMTag.Remove(field.TagKeyGormDefault)
@@ -77,12 +79,7 @@ func main() {
 				return columnName
 			}),
 		),
-		g.GenerateModel("role", gen.FieldType("created_time", "int64"),
-			gen.FieldGORMTag("extra", func(tag field.GormTag) field.GormTag {
-				return tag.Set("serializer", "json")
-			}),
-			gen.WithMethod(gen.DefaultMethodTableWithNamer),
-		),
+		model.Role{},
 	)
 
 	//role := g.GenerateModel("role")
