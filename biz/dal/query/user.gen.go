@@ -31,7 +31,8 @@ func newUser(db *gorm.DB, opts ...gen.DOOption) user {
 	_user.Name = field.NewString(tableName, "name")
 	_user.Extra = field.NewString(tableName, "extra")
 	_user.DeletedAt = field.NewField(tableName, "deleted_at")
-	_user.IsDeleted = field.NewInt32(tableName, "is_deleted")
+	_user.IsDeleted = field.NewInt16(tableName, "is_deleted")
+	_user.Phone = field.NewString(tableName, "phone")
 
 	_user.fillFieldMap()
 
@@ -46,7 +47,8 @@ type user struct {
 	Name      field.String
 	Extra     field.String
 	DeletedAt field.Field // 删除时间
-	IsDeleted field.Int32 // 是否已删除
+	IsDeleted field.Int16 // 是否已删除
+	Phone     field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -67,7 +69,8 @@ func (u *user) updateTableName(table string) *user {
 	u.Name = field.NewString(table, "name")
 	u.Extra = field.NewString(table, "extra")
 	u.DeletedAt = field.NewField(table, "deleted_at")
-	u.IsDeleted = field.NewInt32(table, "is_deleted")
+	u.IsDeleted = field.NewInt16(table, "is_deleted")
+	u.Phone = field.NewString(table, "phone")
 
 	u.fillFieldMap()
 
@@ -92,12 +95,13 @@ func (u *user) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (u *user) fillFieldMap() {
-	u.fieldMap = make(map[string]field.Expr, 5)
+	u.fieldMap = make(map[string]field.Expr, 6)
 	u.fieldMap["id"] = u.ID
 	u.fieldMap["name"] = u.Name
 	u.fieldMap["extra"] = u.Extra
 	u.fieldMap["deleted_at"] = u.DeletedAt
 	u.fieldMap["is_deleted"] = u.IsDeleted
+	u.fieldMap["phone"] = u.Phone
 }
 
 func (u user) clone(db *gorm.DB) user {

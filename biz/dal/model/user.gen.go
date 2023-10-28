@@ -12,11 +12,12 @@ const TableNameUser = "user"
 
 // User mapped from table <user>
 type User struct {
-	ID        int64          `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
-	Name      string         `gorm:"column:name;not null" json:"name"`
-	Extra     string         `gorm:"column:extra" json:"extra"`
-	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;comment:删除时间" json:"deleted_at"`           // 删除时间
-	IsDeleted int32          `gorm:"column:is_deleted;not null;comment:是否已删除" json:"is_deleted"` // 是否已删除
+	ID        int64          `gorm:"column:id;primaryKey;autoIncrement:true" json:"id,string,omitempty" form:"id"`
+	Name      string         `gorm:"column:name;not null" json:"name" form:"name"`
+	Extra     string         `gorm:"column:extra" json:"extra" form:"extra"`
+	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;comment:删除时间" json:"deleted_at" form:"deleted_at"`           // 删除时间
+	IsDeleted int16          `gorm:"column:is_deleted;not null;comment:是否已删除" json:"is_deleted" form:"is_deleted"` // 是否已删除
+	Phone     string         `gorm:"column:phone;not null" json:"phone" encrypt:"xxx" form:"phone"`
 }
 
 // TableName User's table name
