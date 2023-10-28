@@ -45,6 +45,7 @@ type user struct {
 
 	ALL       field.Asterisk
 	ID        field.Int64
+	RoleID        field.Int64
 	Name      field.String
 	Extra     field.String
 	DeletedAt field.Field // 删除时间
