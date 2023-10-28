@@ -22,7 +22,7 @@ _testmain.go
 *.bmd
 *.cfg
 *.pptx
-*.log
+*.user
 *nohup.out
 *settings.pyc
 *.sublime-project
